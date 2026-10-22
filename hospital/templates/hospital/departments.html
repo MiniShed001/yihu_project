@@ -1,0 +1,33 @@
+{% extends 'hospital/base.html' %}
+{% block title %}科室 · 医院业务系统{% endblock %}
+{% block content %}
+<div class="two-col">
+  <div>
+    <h2>科室列表({{ departments|length }})</h2>
+    <div class="card">
+    {% if departments %}
+    <table>
+      <tr><th>科室</th><th>简介</th><th>医生数</th></tr>
+      {% for d in departments %}
+      <tr>
+        <td><b>{{ d.name }}</b></td>
+        <td class="muted">{{ d.description|default:"—" }}</td>
+        <td>{{ d.doctors.count }} 人</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无科室。</div>
+    {% endif %}
+    </div>
+  </div>
+  <div>
+    <h2>新增科室</h2>
+    <form class="card" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit" style="margin-top:10px">保存科室</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

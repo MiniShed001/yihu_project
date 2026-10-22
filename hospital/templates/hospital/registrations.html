@@ -1,0 +1,45 @@
+{% extends 'hospital/base.html' %}
+{% block title %}挂号 · 医院业务系统{% endblock %}
+{% block content %}
+<div class="two-col">
+  <div>
+    <h2>挂号记录({{ regs|length }})</h2>
+    <div class="card">
+    {% if regs %}
+    <table>
+      <tr><th>患者</th><th>科室</th><th>医生</th><th>就诊日期</th><th>挂号费</th><th>状态</th><th>操作</th></tr>
+      {% for r in regs %}
+      <tr>
+        <td><b>{{ r.patient.name }}</b></td>
+        <td>{{ r.department.name }}</td>
+        <td>{{ r.doctor.name }}</td>
+        <td>{{ r.visit_date }}</td>
+        <td>¥{{ r.fee }}</td>
+        <td>{% if r.status == 'waiting' %}<span class="tag waiting">待就诊</span>{% elif r.status == 'done' %}<span class="tag done">已就诊</span>{% else %}<span class="tag cancelled">已取消</span>{% endif %}</td>
+        <td>
+          {% if r.status == 'waiting' %}
+          <form method="post" action="{% url 'hospital:registration_action' r.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button class="btn small" name="action" value="done" type="submit">完成</button>
+            <button class="btn small danger" name="action" value="cancel" type="submit">取消</button>
+          </form>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无挂号记录。</div>
+    {% endif %}
+    </div>
+  </div>
+  <div>
+    <h2>新增挂号</h2>
+    <form class="card" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit" style="margin-top:10px">提交挂号</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

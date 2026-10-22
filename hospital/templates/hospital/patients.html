@@ -1,0 +1,35 @@
+{% extends 'hospital/base.html' %}
+{% block title %}患者 · 医院业务系统{% endblock %}
+{% block content %}
+<div class="two-col">
+  <div>
+    <h2>患者列表({{ patients|length }})</h2>
+    <div class="card">
+    {% if patients %}
+    <table>
+      <tr><th>姓名</th><th>性别</th><th>年龄</th><th>电话</th><th>建档时间</th></tr>
+      {% for p in patients %}
+      <tr>
+        <td><b>{{ p.name }}</b></td>
+        <td>{{ p.gender }}</td>
+        <td>{{ p.age|default:"—" }}</td>
+        <td>{{ p.phone|default:"—" }}</td>
+        <td class="muted">{{ p.created_at|date:"Y-m-d" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无患者。</div>
+    {% endif %}
+    </div>
+  </div>
+  <div>
+    <h2>新增患者</h2>
+    <form class="card" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit" style="margin-top:10px">保存患者</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

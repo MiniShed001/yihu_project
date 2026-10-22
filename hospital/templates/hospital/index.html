@@ -1,0 +1,38 @@
+{% extends 'hospital/base.html' %}
+{% block title %}总览 · 医院业务系统{% endblock %}
+{% block content %}
+<h2>业务总览</h2>
+<div class="grid g4">
+  <div class="stat"><div class="num">{{ n_departments }}</div><div class="lbl">科室</div></div>
+  <div class="stat"><div class="num">{{ n_doctors }}</div><div class="lbl">在岗医生</div></div>
+  <div class="stat"><div class="num">{{ n_patients }}</div><div class="lbl">患者</div></div>
+  <div class="stat"><div class="num">{{ n_records }}</div><div class="lbl">就诊记录</div></div>
+</div>
+<div class="grid g4">
+  <div class="stat"><div class="num">{{ n_registrations }}</div><div class="lbl">累计挂号</div></div>
+  <div class="stat"><div class="num">{{ n_today }}</div><div class="lbl">今日挂号</div></div>
+  <div class="stat"><div class="num" style="color:#b45309">{{ n_waiting }}</div><div class="lbl">待就诊</div></div>
+  <div class="stat"><div class="num">{{ n_done }}</div><div class="lbl">已就诊</div></div>
+</div>
+
+<h2>最近挂号</h2>
+<div class="card">
+{% if recent_regs %}
+<table>
+  <tr><th>患者</th><th>科室</th><th>医生</th><th>就诊日期</th><th>状态</th><th>挂号费</th></tr>
+  {% for r in recent_regs %}
+  <tr>
+    <td>{{ r.patient.name }}</td>
+    <td>{{ r.department.name }}</td>
+    <td>{{ r.doctor.name }}</td>
+    <td>{{ r.visit_date }}</td>
+    <td>{% if r.status == 'waiting' %}<span class="tag waiting">待就诊</span>{% elif r.status == 'done' %}<span class="tag done">已就诊</span>{% else %}<span class="tag cancelled">已取消</span>{% endif %}</td>
+    <td>¥{{ r.fee }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">暂无挂号记录,请先到「挂号」页新增。</div>
+{% endif %}
+</div>
+{% endblock %}
